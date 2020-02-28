@@ -1,3 +1,5 @@
+import sys
+
 EXIT = 0
 ENCRYPT = 1
 DECRYPT = 2
@@ -296,20 +298,27 @@ def menu():
             print("2. Use CBC")
             print("0. Exit")
 
-            mode = -1
-            while mode not in [EXIT, ECB, CBC]:
+            while True:
                 mode = int(input("Enter Choice: "))
 
                 if mode in [ECB, CBC]:
                     crypt(mode, option)
                 elif mode == EXIT:
-                    exit()
+                    sys.exit()
                 else:
                     print("ERROR: Wrong Choice. Try Again.")
+
+                if mode in [EXIT, ECB, CBC]:
+                    break
+
         elif option == EXIT:
-            exit()
+            sys.exit()
+
         else:
             print("ERROR: Wrong Choice. Try Again.")
+
+        if option in [EXIT, ENCRYPT, DECRYPT]:
+            break
 
 
 menu()
