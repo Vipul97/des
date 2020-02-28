@@ -288,8 +288,7 @@ def menu():
     print("2. Decrypt")
     print("0. Exit")
 
-    option = -1
-    while option not in [EXIT, ENCRYPT, DECRYPT]:
+    while True:
         option = int(input("Enter Choice: "))
 
         if option in [ENCRYPT, DECRYPT]:
