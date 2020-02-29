@@ -44,8 +44,8 @@ def gen_subkeys(key):
     left_rotate_order = [1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1]
     key_permutation = permute(key, key_permutation_table)
 
-    print("%22s" % "KEY:", key)
-    print("%22s" % "KEY PERMUTATION:", key_permutation)
+    print(f'{"KEY:":>22} {key}')
+    print(f'{"KEY PERMUTATION:":>22} {key_permutation}')
 
     Lk = key_permutation[:28]
     Rk = key_permutation[28:]
@@ -121,7 +121,7 @@ def s_box(input):
         sub_str = input[i * 6:i * 6 + 6]
         row = int(sub_str[0] + sub_str[-1], 2)
         column = int(sub_str[1:5], 2)
-        output += '{0:04b}'.format(s_box_table[i][row][column])
+        output += f'{s_box_table[i][row][column]:04b}'
 
     return output
 
@@ -134,7 +134,7 @@ def read(filename):
            ]
     bin_str = ''
 
-    with open('%s.txt' % filename) as file:
+    with open(f'{filename}.txt') as file:
         hex_str = file.read()[:-1]
 
         for hex in hex_str:
@@ -176,15 +176,15 @@ def round(input, subkey):
     XOR2 = xor(p_box, L)
     output = R + XOR2
 
-    print("%22s" % "INPUT:", L, R)
-    print("%22s" % "SUBKEY:", subkey)
-    print("%22s" % "EXPANSION PERMUTATION:", expansion_permutation)
-    print("%22s" % "XOR:", XOR1)
-    print("%22s" % "S-BOX SUBSTITUTION:", s_box_output)
-    print("%22s" % "P-BOX PERMUTATION:", p_box)
-    print("%22s" % "XOR:", XOR2)
-    print("%22s" % "SWAP:", R, XOR2)
-    print("%22s" % "OUTPUT:", output)
+    print(f'{"INPUT:":>22} {L} {R}')
+    print(f'{"SUBKEY:":>22} {subkey}')
+    print(f'{"EXPANSION PERMUTATION:":>22} {expansion_permutation}')
+    print(f'{"XOR:":>22} {XOR1}')
+    print(f'{"S-BOX SUBSTITUTION:":>22} {s_box_output}')
+    print(f'{"P-BOX PERMUTATION:":>22} {p_box}')
+    print(f'{"XOR:":>22} {XOR2}')
+    print(f'{"SWAP:":>22} {R} {XOR2}')
+    print(f'{"OUTPUT:":>22} {output}')
 
     return output
 
@@ -214,8 +214,8 @@ def DES(input, subkeys, crypt_type):
 
     print()
     print()
-    print("%22s" % "BLOCK:", input)
-    print("%22s" % "INITIAL PERMUTATION:", initial_permutation)
+    print(f'{"BLOCK:":>22} {input}')
+    print(f'{"INITIAL PERMUTATION:":>22} {initial_permutation}')
 
     if crypt_type == ENCRYPT:
         start = 0
@@ -229,15 +229,15 @@ def DES(input, subkeys, crypt_type):
     output = initial_permutation
     for i, j in enumerate(range(start, end, step), 1):
         print()
-        print("ROUND " + str(i) + ":")
+        print(f'ROUND {i}:')
         output = round(output, subkeys[j])
 
     swap = output[32:] + output[:32]
     final_permutation = permute(swap, final_permutation_table)
 
     print()
-    print("%22s" % "SWAP:", swap)
-    print("%22s" % "FINAL PERMUTATION:", final_permutation)
+    print(f'{"SWAP:":>22} {swap}')
+    print(f'{"FINAL PERMUTATION:":>22} {final_permutation}')
 
     return final_permutation
 
@@ -280,32 +280,32 @@ def crypt(mode, crypt_type):
             bin_out_str += output
 
     with open(out_filename, 'w') as out_str:
-        out_str.write('{:0{}X}\n'.format(int(bin_out_str, 2), len(bin_out_str) // 4))
+        out_str.write(f'{int(bin_out_str, 2):0{len(bin_out_str) // 4}X}\n')
 
 
 def menu():
-    print("1. Encrypt")
-    print("2. Decrypt")
-    print("0. Exit")
+    print('1. Encrypt')
+    print('2. Decrypt')
+    print('0. Exit')
 
     while True:
-        option = int(input("Enter Choice: "))
+        option = int(input('Enter Choice: '))
 
         if option in [ENCRYPT, DECRYPT]:
             print()
-            print("1. Use ECB")
-            print("2. Use CBC")
-            print("0. Exit")
+            print('1. Use ECB')
+            print('2. Use CBC')
+            print('0. Exit')
 
             while True:
-                mode = int(input("Enter Choice: "))
+                mode = int(input('Enter Choice: '))
 
                 if mode in [ECB, CBC]:
                     crypt(mode, option)
                 elif mode == EXIT:
                     sys.exit()
                 else:
-                    print("ERROR: Wrong Choice. Try Again.")
+                    print('ERROR: Wrong Choice. Try Again.')
 
                 if mode in [EXIT, ECB, CBC]:
                     break
@@ -314,7 +314,7 @@ def menu():
             sys.exit()
 
         else:
-            print("ERROR: Wrong Choice. Try Again.")
+            print('ERROR: Wrong Choice. Try Again.')
 
         if option in [EXIT, ENCRYPT, DECRYPT]:
             break
