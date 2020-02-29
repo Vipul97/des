@@ -137,7 +137,7 @@ def read(filename):
     with open('%s.txt' % filename) as file:
         hex_str = file.read()[:-1]
 
-        for i, hex in enumerate(hex_str):
+        for hex in hex_str:
             bin_str += bin[int(hex, 16)]
 
     return bin_str
