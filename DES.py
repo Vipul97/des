@@ -227,9 +227,9 @@ def DES(input, subkeys, crypt_type):
         step = -1
 
     output = initial_permutation
-    for (i, j) in enumerate(range(start, end, step)):
+    for i, j in enumerate(range(start, end, step), 1):
         print()
-        print("ROUND " + str(i + 1) + ":")
+        print("ROUND " + str(i) + ":")
         output = round(output, subkeys[j])
 
     swap = output[32:] + output[:32]
