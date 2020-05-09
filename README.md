@@ -1,5 +1,5 @@
 # Data Encryption Standard (DES)
-Implementation of Data Encryption Standard (DES) in Python 3.7.
+Implementation of Data Encryption Standard (DES) in Python 3.8.
 
 Supports Electronic Codebook (ECB) and Cipher Block Chaining (CBC) Block Cipher Modes of Operation.
 
