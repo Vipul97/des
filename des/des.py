@@ -248,20 +248,20 @@ def crypt(mode, crypt_type):
     print()
 
     if crypt_type == ENCRYPT:
-        bin_in_str = pad(read('Plaintext'))
-        out_filename = 'Ciphertext.txt'
+        bin_in_str = pad(read('plaintext'))
+        out_filename = 'ciphertext.txt'
     else:
-        bin_in_str = pad(read('Ciphertext'))
-        out_filename = 'Plaintext.txt'
+        bin_in_str = pad(read('ciphertext'))
+        out_filename = 'plaintext.txt'
 
-    subkeys = gen_subkeys(read('Key'))
+    subkeys = gen_subkeys(read('key'))
     bin_out_str = ''
 
     if mode == ECB:
         for i in range(0, len(bin_in_str), 64):
             bin_out_str += DES(bin_in_str[i:i + 64], subkeys, crypt_type)
     else:
-        IV = read('IV')
+        IV = read('iv')
         toXOR = IV
 
         for i in range(0, len(bin_in_str), 64):
