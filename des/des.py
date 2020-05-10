@@ -14,12 +14,7 @@ def left_rotate(l, n_shifts):
 
 
 def permute(input, table):
-    output = ''
-
-    for i in table:
-        output += input[i]
-
-    return output
+    return ''.join(input[i] for i in table)
 
 
 def gen_subkeys(key):
@@ -134,22 +129,13 @@ def read(filename):
            '1000', '1001', '1010', '1011',
            '1100', '1101', '1110', '1111'
            ]
-    bin_str = ''
 
     with open(f'{filename}.txt') as file:
-        hex_str = file.read()[:-1]
-
-        for hex in hex_str:
-            bin_str += bin[int(hex, 16)]
-
-    return bin_str
+        return ''.join(bin[int(hex, 16)] for hex in file.read()[:-1])
 
 
 def pad(bin_str):
-    while len(bin_str) % 64 != 0:
-        bin_str += '0'
-
-    return bin_str
+    return bin_str + '0' * ((64 - len(bin_str) % 64) % 64)
 
 
 def round(input, subkey):
