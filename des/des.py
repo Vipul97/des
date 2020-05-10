@@ -1,12 +1,6 @@
 #!/usr/bin/env python3
 
-import sys
-
-EXIT = 0
-ENCRYPT = 1
-DECRYPT = 2
-ECB = 1
-CBC = 2
+import argparse
 
 
 def left_rotate(l, n_shifts):
@@ -205,7 +199,7 @@ def DES(input, subkeys, crypt_type):
     print(f'{"BLOCK:":>22} {input}')
     print(f'{"INITIAL PERMUTATION:":>22} {initial_permutation}')
 
-    if crypt_type == ENCRYPT:
+    if crypt_type == 'e':
         start = 0
         end = 16
         step = 1
@@ -231,9 +225,7 @@ def DES(input, subkeys, crypt_type):
 
 
 def crypt(mode, crypt_type):
-    print()
-
-    if crypt_type == ENCRYPT:
+    if crypt_type == 'e':
         bin_in_str = pad(read('plaintext'))
         out_filename = 'ciphertext.txt'
     else:
@@ -243,7 +235,7 @@ def crypt(mode, crypt_type):
     subkeys = gen_subkeys(read('key'))
     bin_out_str = ''
 
-    if mode == ECB:
+    if mode == 'ecb':
         for i in range(0, len(bin_in_str), 64):
             bin_out_str += DES(bin_in_str[i:i + 64], subkeys, crypt_type)
     else:
@@ -253,12 +245,12 @@ def crypt(mode, crypt_type):
         for i in range(0, len(bin_in_str), 64):
             block = bin_in_str[i:i + 64]
 
-            if crypt_type == ENCRYPT:
+            if crypt_type == 'e':
                 block = xor(block, toXOR)
 
             final_permutation = DES(block, subkeys, crypt_type)
 
-            if crypt_type == ENCRYPT:
+            if crypt_type == 'e':
                 output = final_permutation
                 toXOR = final_permutation
             else:
@@ -271,42 +263,14 @@ def crypt(mode, crypt_type):
         out_str.write(f'{int(bin_out_str, 2):0{len(bin_out_str) // 4}X}\n')
 
 
-def menu():
-    print('1. Encrypt')
-    print('2. Decrypt')
-    print('0. Exit')
-
-    while True:
-        option = int(input('Enter Choice: '))
-
-        if option in [ENCRYPT, DECRYPT]:
-            print()
-            print('1. Use ECB')
-            print('2. Use CBC')
-            print('0. Exit')
-
-            while True:
-                mode = int(input('Enter Choice: '))
-
-                if mode in [ECB, CBC]:
-                    crypt(mode, option)
-                elif mode == EXIT:
-                    sys.exit()
-                else:
-                    print('ERROR: Wrong Choice. Try Again.')
-
-                if mode in [EXIT, ECB, CBC]:
-                    break
-
-        elif option == EXIT:
-            sys.exit()
-
-        else:
-            print('ERROR: Wrong Choice. Try Again.')
-
-        if option in [EXIT, ENCRYPT, DECRYPT]:
-            break
-
-
 if __name__ == "__main__":
-    menu()
+    parser = argparse.ArgumentParser()
+    crypt_group = parser.add_mutually_exclusive_group(required='True')
+    crypt_group.add_argument('-e', action='store_const', dest='option', const='e')
+    crypt_group.add_argument('-d', action='store_const', dest='option', const='d')
+    mode_group = parser.add_mutually_exclusive_group()
+    mode_group.add_argument('-ecb', action='store_const', dest='mode', const='ecb')
+    mode_group.add_argument('-cbc', action='store_const', dest='mode', const='cbc')
+    parser.set_defaults(mode='ecb')
+    args = parser.parse_args()
+    crypt(args.mode, args.option)
