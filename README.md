@@ -4,12 +4,39 @@ Implementation of Data Encryption Standard (DES) in Python 3.8.
 Supports Electronic Codebook (ECB) and Cipher Block Chaining (CBC) Block Cipher Modes of Operation.
 
 ## Instructions
-1. Input the hexadecimal input in `des/plaintext.txt` (for Encryption) or `des/ciphertext.txt` (for Decryption).
-2. Input the hexadecimal key in `des/key.txt`.
-3. If using the CBC Block Cipher Mode of Operation, input the hexadecimal Initialization Vector (IV) in `des/iv.txt`.
-4. Run `des.py`.
+Run `des.py`.
 
-        usage: des.py [-h] (-e | -d) [-ecb | -cbc]
+        usage: des.py [-h] {ecb,cbc} ...
 
-5. Hexadecimal output will be saved in `des/ciphertext.txt` (if Encryption option is used) or `des/plaintext.txt` (if Decryption option is used).
-
+        positional arguments:
+          {ecb,cbc}
+            ecb       use Electronic Codebook (ECB) encryption mode
+            cbc       use Cipher Block Chaining (CBC) encryption mode
+        
+        optional arguments:
+          -h, --help  show this help message and exit
+<!-- -->
+        usage: des.py ecb [-h] (-e | -d) key_file infile outfile
+        
+        positional arguments:
+          key_file    text file to be used as key for encryption/decryption
+          infile      text file to be used as input for encryption/decryption
+          outfile     text file to be used as output for encryption/decryption
+        
+        optional arguments:
+          -h, --help  show this help message and exit
+          -e          encrypt
+          -d          decrypt
+<!-- -->
+        usage: des.py cbc [-h] (-e | -d) key_file iv_file infile outfile
+        
+        positional arguments:
+          key_file    text file to be used as key for encryption/decryption
+          iv_file     text file to be used as IV for encryption/decryption
+          infile      text file to be used as input for encryption/decryption
+          outfile     text file to be used as output for encryption/decryption
+        
+        optional arguments:
+          -h, --help  show this help message and exit
+          -e          encrypt
+          -d          decrypt

@@ -1,7 +1,7 @@
+import itertools
 import unittest
-from pathlib import Path
 
-from des.des import left_rotate, permute, gen_subkeys, xor, s_box, read, pad, round, DES
+from des.des import left_rotate, permute, gen_subkeys, xor, s_box, hex_to_bin, pad, round, DES, crypt
 
 
 class Test(unittest.TestCase):
@@ -36,9 +36,10 @@ class Test(unittest.TestCase):
     def test_s_box(self):
         self.assertEqual(s_box('01' * 24), '11000001010100101111110101010110')
 
-    def test_read(self):
-        self.assertEqual(read(Path('../tests/test_read')),
-                         '0000000100100011010001010110011110001001101010111100110111101111')
+    def test_hex_to_bin(self):
+        with open('test_hex_to_bin.txt') as test_file:
+            self.assertEqual(hex_to_bin(test_file),
+                             '0000000100100011010001010110011110001001101010111100110111101111')
 
     def test_pad(self):
         self.assertEqual(len(pad('')), 0)
@@ -55,6 +56,24 @@ class Test(unittest.TestCase):
                          '0011111110111110101011100011110101101101001101110111011011001100')
         self.assertEqual(DES('01' * 32, ['01' * 24] * 16, 'd'),
                          '0011111110111110101011100011110101101101001101110111011011001100')
+
+    def test_crypt(self):
+        expected_results = ['DA02CE3A89ECAC3BDA02CE3A89ECAC3B', '411B8280950607EF411B8280950607EF',
+                            'E7BE36D4719EB0B790DF1619A4B7FAB9', 'BEE47D7F6AF9F810435D084E79AE63CF']
+
+        for i, (mode, option) in enumerate(itertools.product(['ecb', 'cbc'], ['e', 'd'])):
+            with self.subTest(mode=mode, option=option):
+                with open('test_key_file.txt') as test_key_file:
+                    with open('test_infile.txt') as test_infile:
+                        with open('test_outfile.txt', 'w+') as test_outfile:
+                            if mode == 'cbc':
+                                with open('test_iv_file.txt') as test_iv_file:
+                                    crypt(mode, option, test_key_file, test_infile, test_outfile, test_iv_file)
+                            else:
+                                crypt(mode, option, test_key_file, test_infile, test_outfile)
+
+                            test_outfile.seek(0)
+                            self.assertEqual(test_outfile.read()[:-1], expected_results[i])
 
 
 if __name__ == "__main__":

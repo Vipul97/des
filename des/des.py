@@ -117,15 +117,14 @@ def s_box(input):
     return output
 
 
-def read(filename):
+def hex_to_bin(file):
     bin = ['0000', '0001', '0010', '0011',
            '0100', '0101', '0110', '0111',
            '1000', '1001', '1010', '1011',
            '1100', '1101', '1110', '1111'
            ]
 
-    with open(f'{filename}.txt') as file:
-        return ''.join(bin[int(hex, 16)] for hex in file.read()[:-1])
+    return ''.join(bin[int(hex, 16)] for hex in file.read()[:-1])
 
 
 def pad(bin_str):
@@ -224,22 +223,16 @@ def DES(input, subkeys, crypt_type):
     return final_permutation
 
 
-def crypt(mode, crypt_type):
-    if crypt_type == 'e':
-        bin_in_str = pad(read('plaintext'))
-        out_filename = 'ciphertext.txt'
-    else:
-        bin_in_str = pad(read('ciphertext'))
-        out_filename = 'plaintext.txt'
-
-    subkeys = gen_subkeys(read('key'))
+def crypt(mode, crypt_type, key_file, infile, outfile, iv_file=None):
+    bin_in_str = pad(hex_to_bin(infile))
+    subkeys = gen_subkeys(hex_to_bin(key_file))
     bin_out_str = ''
 
     if mode == 'ecb':
         for i in range(0, len(bin_in_str), 64):
             bin_out_str += DES(bin_in_str[i:i + 64], subkeys, crypt_type)
     else:
-        IV = read('iv')
+        IV = hex_to_bin(iv_file)
         toXOR = IV
 
         for i in range(0, len(bin_in_str), 64):
@@ -259,18 +252,37 @@ def crypt(mode, crypt_type):
 
             bin_out_str += output
 
-    with open(out_filename, 'w') as out_str:
-        out_str.write(f'{int(bin_out_str, 2):0{len(bin_out_str) // 4}X}\n')
+    outfile.write(f'{int(bin_out_str, 2):0{len(bin_out_str) // 4}X}\n')
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    crypt_group = parser.add_mutually_exclusive_group(required='True')
-    crypt_group.add_argument('-e', action='store_const', dest='option', const='e')
-    crypt_group.add_argument('-d', action='store_const', dest='option', const='d')
-    mode_group = parser.add_mutually_exclusive_group()
-    mode_group.add_argument('-ecb', action='store_const', dest='mode', const='ecb')
-    mode_group.add_argument('-cbc', action='store_const', dest='mode', const='cbc')
-    parser.set_defaults(mode='ecb')
+    sub_parsers = parser.add_subparsers(dest='mode')
+    ecb_parser = sub_parsers.add_parser('ecb', help='use Electronic Codebook (ECB) encryption mode')
+    crypt_group = ecb_parser.add_mutually_exclusive_group(required='True')
+    crypt_group.add_argument('-e', action='store_const', dest='option', const='e', help='encrypt')
+    crypt_group.add_argument('-d', action='store_const', dest='option', const='d', help='decrypt')
+    ecb_parser.add_argument('key_file', type=argparse.FileType('r'),
+                            help='text file to be used as key for encryption/decryption')
+    ecb_parser.add_argument('infile', type=argparse.FileType('r'),
+                            help='text file to be used as input for encryption/decryption')
+    ecb_parser.add_argument('outfile', type=argparse.FileType('w'),
+                            help='text file to be used as output for encryption/decryption')
+    cbc_parser = sub_parsers.add_parser('cbc', help='use Cipher Block Chaining (CBC) encryption mode')
+    crypt_group = cbc_parser.add_mutually_exclusive_group(required='True')
+    crypt_group.add_argument('-e', action='store_const', dest='option', const='e', help='encrypt')
+    crypt_group.add_argument('-d', action='store_const', dest='option', const='d', help='decrypt')
+    cbc_parser.add_argument('key_file', type=argparse.FileType('r'),
+                            help='text file to be used as key for encryption/decryption')
+    cbc_parser.add_argument('iv_file', type=argparse.FileType('r'),
+                            help='text file to be used as IV for encryption/decryption')
+    cbc_parser.add_argument('infile', type=argparse.FileType('r'),
+                            help='text file to be used as input for encryption/decryption')
+    cbc_parser.add_argument('outfile', type=argparse.FileType('w'),
+                            help='text file to be used as output for encryption/decryption')
     args = parser.parse_args()
-    crypt(args.mode, args.option)
+
+    if args.mode == 'ecb':
+        crypt(args.mode, args.option, args.key_file, args.infile, args.outfile)
+    else:
+        crypt(args.mode, args.option, args.key_file, args.infile, args.outfile, args.iv_file)
