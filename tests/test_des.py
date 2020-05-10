@@ -43,6 +43,7 @@ class Test(unittest.TestCase):
     def test_pad(self):
         self.assertEqual(len(pad('')), 0)
         self.assertEqual(len(pad('0')), 64)
+        self.assertEqual(len(pad('0' * 32)), 64)
         self.assertEqual(len(pad('0' * 128)), 128)
 
     def test_round(self):
