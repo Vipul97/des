@@ -28,13 +28,13 @@ Run `des.py`.
           -e          encrypt
           -d          decrypt
 <!-- -->
-        usage: des.py cbc [-h] (-e | -d) key_file iv_file infile outfile
+        usage: des.py cbc [-h] (-e | -d) key_file infile outfile iv_file
         
         positional arguments:
           key_file    text file to be used as key for encryption/decryption
-          iv_file     text file to be used as IV for encryption/decryption
           infile      text file to be used as input for encryption/decryption
           outfile     text file to be used as output for encryption/decryption
+          iv_file     text file to be used as IV for encryption/decryption
         
         optional arguments:
           -h, --help  show this help message and exit

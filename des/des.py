@@ -254,30 +254,28 @@ def crypt(mode, crypt_type, key_file, infile, outfile, iv_file=None):
 
 
 if __name__ == "__main__":
+    def add_common_arguments(parser):
+        crypt_group = parser.add_mutually_exclusive_group(required='True')
+        crypt_group.add_argument('-e', action='store_const', dest='option', const='e', help='encrypt')
+        crypt_group.add_argument('-d', action='store_const', dest='option', const='d', help='decrypt')
+        parser.add_argument('key_file', type=argparse.FileType('r'),
+                            help='text file to be used as key for encryption/decryption')
+        parser.add_argument('infile', type=argparse.FileType('r'),
+                            help='text file to be used as input for encryption/decryption')
+        parser.add_argument('outfile', type=argparse.FileType('w'),
+                            help='text file to be used as output for encryption/decryption')
+
+        return parser
+
+
     parser = argparse.ArgumentParser()
     sub_parsers = parser.add_subparsers(dest='mode')
-    ecb_parser = sub_parsers.add_parser('ecb', help='use Electronic Codebook (ECB) encryption mode')
-    crypt_group = ecb_parser.add_mutually_exclusive_group(required='True')
-    crypt_group.add_argument('-e', action='store_const', dest='option', const='e', help='encrypt')
-    crypt_group.add_argument('-d', action='store_const', dest='option', const='d', help='decrypt')
-    ecb_parser.add_argument('key_file', type=argparse.FileType('r'),
-                            help='text file to be used as key for encryption/decryption')
-    ecb_parser.add_argument('infile', type=argparse.FileType('r'),
-                            help='text file to be used as input for encryption/decryption')
-    ecb_parser.add_argument('outfile', type=argparse.FileType('w'),
-                            help='text file to be used as output for encryption/decryption')
-    cbc_parser = sub_parsers.add_parser('cbc', help='use Cipher Block Chaining (CBC) encryption mode')
-    crypt_group = cbc_parser.add_mutually_exclusive_group(required='True')
-    crypt_group.add_argument('-e', action='store_const', dest='option', const='e', help='encrypt')
-    crypt_group.add_argument('-d', action='store_const', dest='option', const='d', help='decrypt')
-    cbc_parser.add_argument('key_file', type=argparse.FileType('r'),
-                            help='text file to be used as key for encryption/decryption')
+    ecb_parser = add_common_arguments(
+        sub_parsers.add_parser('ecb', help='use Electronic Codebook (ECB) encryption mode'))
+    cbc_parser = add_common_arguments(
+        sub_parsers.add_parser('cbc', help='use Cipher Block Chaining (CBC) encryption mode'))
     cbc_parser.add_argument('iv_file', type=argparse.FileType('r'),
                             help='text file to be used as IV for encryption/decryption')
-    cbc_parser.add_argument('infile', type=argparse.FileType('r'),
-                            help='text file to be used as input for encryption/decryption')
-    cbc_parser.add_argument('outfile', type=argparse.FileType('w'),
-                            help='text file to be used as output for encryption/decryption')
     args = parser.parse_args()
 
     if args.mode == 'ecb':
