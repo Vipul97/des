@@ -3,12 +3,12 @@
 import argparse
 
 
-def left_rotate(l, n_shifts):
-    return l[n_shifts:] + l[:n_shifts]
+def left_rotate(block, n_shifts):
+    return block[n_shifts:] + block[:n_shifts]
 
 
-def permute(input, table):
-    return ''.join(input[i] for i in table)
+def permute(block, table):
+    return ''.join(block[i] for i in table)
 
 
 def gen_subkeys(key):
@@ -38,24 +38,24 @@ def gen_subkeys(key):
     print(f'{"KEY:":>22} {key}')
     print(f'{"KEY PERMUTATION:":>22} {key_permutation}')
 
-    Lk = key_permutation[:28]
-    Rk = key_permutation[28:]
+    lk = key_permutation[:28]
+    rk = key_permutation[28:]
 
     subkeys = []
     for n_shifts in left_rotate_order:
-        Lk = left_rotate(Lk, n_shifts)
-        Rk = left_rotate(Rk, n_shifts)
-        compression_permutation = permute(Lk + Rk, compression_permutation_table)
+        lk = left_rotate(lk, n_shifts)
+        rk = left_rotate(rk, n_shifts)
+        compression_permutation = permute(lk + rk, compression_permutation_table)
         subkeys.append(compression_permutation)
 
     return subkeys
 
 
-def xor(A, B):
-    return bin(int(A, 2) ^ int(B, 2))[2:].zfill(len(A))
+def xor(block_1, block_2):
+    return bin(int(block_1, 2) ^ int(block_2, 2))[2:].zfill(len(block_1))
 
 
-def s_box(input):
+def s_box(block):
     s_box_table = [
         [
             [14, 4, 13, 1, 2, 15, 11, 8, 3, 10, 6, 12, 5, 9, 0, 7],
@@ -109,7 +109,7 @@ def s_box(input):
     output = ''
 
     for i in range(8):
-        sub_str = input[i * 6:i * 6 + 6]
+        sub_str = block[i * 6:i * 6 + 6]
         row = int(sub_str[0] + sub_str[-1], 2)
         column = int(sub_str[1:5], 2)
         output += f'{s_box_table[i][row][column]:04b}'
@@ -118,20 +118,20 @@ def s_box(input):
 
 
 def hex_to_bin(file):
-    bin = ['0000', '0001', '0010', '0011',
-           '0100', '0101', '0110', '0111',
-           '1000', '1001', '1010', '1011',
-           '1100', '1101', '1110', '1111'
-           ]
+    bin_table = ['0000', '0001', '0010', '0011',
+                 '0100', '0101', '0110', '0111',
+                 '1000', '1001', '1010', '1011',
+                 '1100', '1101', '1110', '1111'
+                 ]
 
-    return ''.join(bin[int(hex, 16)] for hex in file.read()[:-1])
+    return ''.join(bin_table[int(hex_digit, 16)] for hex_digit in file.read()[:-1])
 
 
 def pad(bin_str):
     return bin_str + '0' * ((64 - len(bin_str) % 64) % 64)
 
 
-def round(input, subkey):
+def round(input_block, subkey):
     expansion_permutation_table = [
         31, 0, 1, 2, 3, 4,
         3, 4, 5, 6, 7, 8,
@@ -148,29 +148,29 @@ def round(input, subkey):
         1, 7, 23, 13, 31, 26, 2, 8,
         18, 12, 29, 5, 21, 10, 3, 24
     ]
-    L = input[:32]
-    R = input[32:]
-    expansion_permutation = permute(R, expansion_permutation_table)
-    XOR1 = xor(expansion_permutation, subkey)
-    s_box_output = s_box(XOR1)
+    l = input_block[:32]
+    r = input_block[32:]
+    expansion_permutation = permute(r, expansion_permutation_table)
+    xor1 = xor(expansion_permutation, subkey)
+    s_box_output = s_box(xor1)
     p_box = permute(s_box_output, p_box_table)
-    XOR2 = xor(p_box, L)
-    output = R + XOR2
+    xor2 = xor(p_box, l)
+    output = r + xor2
 
-    print(f'{"INPUT:":>22} {L} {R}')
+    print(f'{"INPUT:":>22} {l} {r}')
     print(f'{"SUBKEY:":>22} {subkey}')
     print(f'{"EXPANSION PERMUTATION:":>22} {expansion_permutation}')
-    print(f'{"XOR:":>22} {XOR1}')
+    print(f'{"XOR:":>22} {xor1}')
     print(f'{"S-BOX SUBSTITUTION:":>22} {s_box_output}')
     print(f'{"P-BOX PERMUTATION:":>22} {p_box}')
-    print(f'{"XOR:":>22} {XOR2}')
-    print(f'{"SWAP:":>22} {R} {XOR2}')
+    print(f'{"XOR:":>22} {xor2}')
+    print(f'{"SWAP:":>22} {r} {xor2}')
     print(f'{"OUTPUT:":>22} {output}')
 
     return output
 
 
-def DES(input, subkeys, crypt_type):
+def des(input_block, subkeys, crypt_type):
     initial_permutation_table = [
         57, 49, 41, 33, 25, 17, 9, 1,
         59, 51, 43, 35, 27, 19, 11, 3,
@@ -191,11 +191,11 @@ def DES(input, subkeys, crypt_type):
         33, 1, 41, 9, 49, 17, 57, 25,
         32, 0, 40, 8, 48, 16, 56, 24
     ]
-    initial_permutation = permute(input, initial_permutation_table)
+    initial_permutation = permute(input_block, initial_permutation_table)
 
     print()
     print()
-    print(f'{"BLOCK:":>22} {input}')
+    print(f'{"BLOCK:":>22} {input_block}')
     print(f'{"INITIAL PERMUTATION:":>22} {initial_permutation}')
 
     if crypt_type == 'e':
@@ -230,25 +230,23 @@ def crypt(mode, crypt_type, key_file, infile, outfile, iv_file=None):
 
     if mode == 'ecb':
         for i in range(0, len(bin_in_str), 64):
-            bin_out_str += DES(bin_in_str[i:i + 64], subkeys, crypt_type)
+            bin_out_str += des(bin_in_str[i:i + 64], subkeys, crypt_type)
     else:
-        IV = hex_to_bin(iv_file)
-        toXOR = IV
+        last_block = hex_to_bin(iv_file)
 
         for i in range(0, len(bin_in_str), 64):
             block = bin_in_str[i:i + 64]
 
             if crypt_type == 'e':
-                block = xor(block, toXOR)
+                block = xor(block, last_block)
 
-            final_permutation = DES(block, subkeys, crypt_type)
+            output = des(block, subkeys, crypt_type)
 
             if crypt_type == 'e':
-                output = final_permutation
-                toXOR = final_permutation
+                last_block = output
             else:
-                output = xor(final_permutation, toXOR)
-                toXOR = block
+                output = xor(output, last_block)
+                last_block = block
 
             bin_out_str += output
 

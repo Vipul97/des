@@ -1,7 +1,7 @@
 import itertools
 import unittest
 
-from des.des import left_rotate, permute, gen_subkeys, xor, s_box, hex_to_bin, pad, round, DES, crypt
+from des.des import left_rotate, permute, gen_subkeys, xor, s_box, hex_to_bin, pad, round, des, crypt
 
 
 class Test(unittest.TestCase):
@@ -52,9 +52,9 @@ class Test(unittest.TestCase):
                          '0101010101010101010101010101010101101101100011101010110010011110')
 
     def test_des(self):
-        self.assertEqual(DES('01' * 32, ['01' * 24] * 16, 'e'),
+        self.assertEqual(des('01' * 32, ['01' * 24] * 16, 'e'),
                          '0011111110111110101011100011110101101101001101110111011011001100')
-        self.assertEqual(DES('01' * 32, ['01' * 24] * 16, 'd'),
+        self.assertEqual(des('01' * 32, ['01' * 24] * 16, 'd'),
                          '0011111110111110101011100011110101101101001101110111011011001100')
 
     def test_crypt(self):
