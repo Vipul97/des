@@ -1,36 +1,60 @@
-from unittest import TestCase
+import unittest
+from pathlib import Path
+
+from des.des import left_rotate, permute, gen_subkeys, xor, s_box, read, pad, round, DES
 
 
-class Test(TestCase):
+class Test(unittest.TestCase):
     def test_left_rotate(self):
-        self.fail()
+        self.assertEqual(left_rotate('01' * 14, 1), '10' * 14)
 
     def test_permute(self):
-        self.fail()
+        self.assertEqual(permute('01' * 16, [i for i in range(31, -1, -1)]), '10' * 16)
 
     def test_gen_subkeys(self):
-        self.fail()
+        self.assertEqual(gen_subkeys('01' * 32), ['101100001001001011001010110101010000001001010100',
+                                                  '101100000001101011010010110100011000001001010100',
+                                                  '001101000111101001010000010100011010011010001100',
+                                                  '000001100111010101010100001110000011010010001101',
+                                                  '010011100100010101010101001010100111000010100111',
+                                                  '010011111100000100101001001001100110100110100011',
+                                                  '100010111000000110101011101001100000100101010011',
+                                                  '101110010000101010001011110001111000001101010010',
+                                                  '001110010001101010001010110001011000001101001010',
+                                                  '001100000011100011001100010101001001011001001100',
+                                                  '000100000110110001010100010110001001010011101100',
+                                                  '010001000110110100110100000010001111110010101001',
+                                                  '110001101010010100100101001010100111110000110001',
+                                                  '110010111000011000100011101010110100100100110010',
+                                                  '111010011001001010101010100001010100101100010010',
+                                                  '101000011001001010101010100101010000101101010000'])
 
     def test_xor(self):
-        self.fail()
+        self.assertEqual(
+            xor('01' * 24, '01' * 24), '0' * 48)
 
     def test_s_box(self):
-        self.fail()
+        self.assertEqual(s_box('01' * 24), '11000001010100101111110101010110')
 
     def test_read(self):
-        self.fail()
+        self.assertEqual(read(Path('../tests/test_read')),
+                         '0000000100100011010001010110011110001001101010111100110111101111')
 
     def test_pad(self):
-        self.fail()
+        self.assertEqual(len(pad('')), 0)
+        self.assertEqual(len(pad('0')), 64)
+        self.assertEqual(len(pad('0' * 128)), 128)
 
     def test_round(self):
-        self.fail()
+        self.assertEqual(round('01' * 32, '01' * 24),
+                         '0101010101010101010101010101010101101101100011101010110010011110')
 
     def test_des(self):
-        self.fail()
+        self.assertEqual(DES('01' * 32, ['01' * 24] * 16, 1),
+                         '0011111110111110101011100011110101101101001101110111011011001100')
+        self.assertEqual(DES('01' * 32, ['01' * 24] * 16, 2),
+                         '0011111110111110101011100011110101101101001101110111011011001100')
 
-    def test_crypt(self):
-        self.fail()
 
-    def test_menu(self):
-        self.fail()
+if __name__ == "__main__":
+    unittest.main()
