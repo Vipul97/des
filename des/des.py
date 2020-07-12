@@ -3,6 +3,10 @@
 import argparse
 
 
+def fprint(text, variable):
+    print(f'{text:>22} {variable}')
+
+
 def left_rotate(block, n_shifts):
     return block[n_shifts:] + block[:n_shifts]
 
@@ -35,8 +39,8 @@ def gen_subkeys(key):
     left_rotate_order = [1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1]
     key_permutation = permute(key, key_permutation_table)
 
-    print(f'{"KEY:":>22} {key}')
-    print(f'{"KEY PERMUTATION:":>22} {key_permutation}')
+    fprint('KEY:', key)
+    fprint('KEY PERMUTATION', key_permutation)
 
     lk = key_permutation[:28]
     rk = key_permutation[28:]
@@ -157,15 +161,15 @@ def round(input_block, subkey):
     xor2 = xor(p_box, l)
     output = r + xor2
 
-    print(f'{"INPUT:":>22} {l} {r}')
-    print(f'{"SUBKEY:":>22} {subkey}')
-    print(f'{"EXPANSION PERMUTATION:":>22} {expansion_permutation}')
-    print(f'{"XOR:":>22} {xor1}')
-    print(f'{"S-BOX SUBSTITUTION:":>22} {s_box_output}')
-    print(f'{"P-BOX PERMUTATION:":>22} {p_box}')
-    print(f'{"XOR:":>22} {xor2}')
-    print(f'{"SWAP:":>22} {r} {xor2}')
-    print(f'{"OUTPUT:":>22} {output}')
+    fprint('INPUT:', f'{l} {r}')
+    fprint('SUBKEY:', subkey)
+    fprint('EXPANSION PERMUTATION:', expansion_permutation)
+    fprint('XOR:', xor1)
+    fprint('S-BOX SUBSTITUTION:', s_box_output)
+    fprint('P-BOX PERMUTATION:', p_box)
+    fprint('XOR:', xor2)
+    fprint('SWAP:', f'{r} {xor2}')
+    fprint('OUTPUT:', output)
 
     return output
 
@@ -195,8 +199,8 @@ def des(input_block, subkeys, crypt_type):
 
     print()
     print()
-    print(f'{"BLOCK:":>22} {input_block}')
-    print(f'{"INITIAL PERMUTATION:":>22} {initial_permutation}')
+    fprint('BLOCK:', input_block)
+    fprint('INITIAL PERMUTATION:', initial_permutation)
 
     if crypt_type == 'e':
         start = 0
@@ -217,8 +221,8 @@ def des(input_block, subkeys, crypt_type):
     final_permutation = permute(swap, final_permutation_table)
 
     print()
-    print(f'{"SWAP:":>22} {swap}')
-    print(f'{"FINAL PERMUTATION:":>22} {final_permutation}')
+    fprint('SWAP:', swap)
+    fprint('FINAL PERMUTATION:', final_permutation)
 
     return final_permutation
 
