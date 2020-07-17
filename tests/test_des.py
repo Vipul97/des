@@ -30,16 +30,14 @@ class Test(unittest.TestCase):
                                                   '101000011001001010101010100101010000101101010000'])
 
     def test_xor(self):
-        self.assertEqual(
-            xor('01' * 24, '01' * 24), '0' * 48)
+        self.assertEqual(xor('01' * 24, '01' * 24), '0' * 48)
 
     def test_s_box(self):
         self.assertEqual(s_box('01' * 24), '11000001010100101111110101010110')
 
     def test_hex_to_bin(self):
         with open('test_hex_to_bin.txt') as test_file:
-            self.assertEqual(hex_to_bin(test_file),
-                             '0000000100100011010001010110011110001001101010111100110111101111')
+            self.assertEqual(hex_to_bin(test_file), '0000000100100011010001010110011110001001101010111100110111101111')
 
     def test_pad(self):
         self.assertEqual(len(pad('')), 0)
@@ -52,10 +50,11 @@ class Test(unittest.TestCase):
                          '0101010101010101010101010101010101101101100011101010110010011110')
 
     def test_des(self):
-        self.assertEqual(des('01' * 32, ['01' * 24] * 16, 'e'),
-                         '0011111110111110101011100011110101101101001101110111011011001100')
-        self.assertEqual(des('01' * 32, ['01' * 24] * 16, 'd'),
-                         '0011111110111110101011100011110101101101001101110111011011001100')
+        expected_results = ['0011111110111110101011100011110101101101001101110111011011001100',
+                            '0011111110111110101011100011110101101101001101110111011011001100']
+
+        for i, option in enumerate(['e', 'd']):
+            self.assertEqual(des('01' * 32, ['01' * 24] * 16, option), expected_results[i])
 
     def test_crypt(self):
         expected_results = ['DA02CE3A89ECAC3BDA02CE3A89ECAC3B', '411B8280950607EF411B8280950607EF',
