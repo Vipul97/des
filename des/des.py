@@ -2,6 +2,8 @@
 
 import argparse
 
+BLOCK_SIZE = 64
+
 
 def fprint(text, variable):
     print(f'{text:>22}: {variable}')
@@ -134,7 +136,7 @@ def hex_to_bin(file):
 
 
 def pad(bin_str):
-    return bin_str + '0' * ((64 - len(bin_str) % 64) % 64)
+    return bin_str + '0' * ((BLOCK_SIZE - len(bin_str) % BLOCK_SIZE) % BLOCK_SIZE)
 
 
 def round(input_block, subkey):
@@ -218,7 +220,7 @@ def des(input_block, subkeys, crypt_type):
         print(f'ROUND {i}:')
         output = round(output, subkeys[j])
 
-    swap = output[len(output) // 2:] + output[:len(output) // 2]
+    swap = output[BLOCK_SIZE // 2:] + output[:BLOCK_SIZE // 2]
     final_permutation = permute(swap, final_permutation_table)
 
     print()
@@ -234,13 +236,13 @@ def crypt(mode, crypt_type, key_file, infile, outfile, iv_file=None):
     bin_out_str = ''
 
     if mode == 'ecb':
-        for i in range(0, len(bin_in_str), 64):
-            bin_out_str += des(bin_in_str[i:i + 64], subkeys, crypt_type)
+        for i in range(0, len(bin_in_str), BLOCK_SIZE):
+            bin_out_str += des(bin_in_str[i:i + BLOCK_SIZE], subkeys, crypt_type)
     else:
         last_block = hex_to_bin(iv_file)
 
-        for i in range(0, len(bin_in_str), 64):
-            block = bin_in_str[i:i + 64]
+        for i in range(0, len(bin_in_str), BLOCK_SIZE):
+            block = bin_in_str[i:i + BLOCK_SIZE]
 
             if crypt_type == 'e':
                 block = xor(block, last_block)
