@@ -6,7 +6,7 @@ from des.des import left_rotate, permute, gen_subkeys, xor, s_box, hex_to_bin, p
 
 class Test(unittest.TestCase):
     def test_left_rotate(self):
-        self.assertEqual(left_rotate('01' * 14, 1), '10' * 14)
+        self.assertEqual(left_rotate(['01' * 14], 1), ['10' * 14])
 
     def test_permute(self):
         self.assertEqual(permute('01' * 16, [i for i in range(31, -1, -1)]), '10' * 16)

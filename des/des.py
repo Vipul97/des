@@ -7,8 +7,12 @@ def fprint(text, variable):
     print(f'{text:>22}: {variable}')
 
 
-def left_rotate(block, n_shifts):
-    return block[n_shifts:] + block[:n_shifts]
+def split_block(block):
+    return block[:len(block) // 2], block[len(block) // 2:]
+
+
+def left_rotate(blocks, n_shifts):
+    return [block[n_shifts:] + block[:n_shifts] for block in blocks]
 
 
 def permute(block, table):
@@ -42,13 +46,11 @@ def gen_subkeys(key):
     fprint('KEY', key)
     fprint('KEY PERMUTATION', key_permutation)
 
-    lk = key_permutation[:28]
-    rk = key_permutation[28:]
+    lk, rk = split_block(key_permutation)
 
     subkeys = []
     for n_shifts in left_rotate_order:
-        lk = left_rotate(lk, n_shifts)
-        rk = left_rotate(rk, n_shifts)
+        lk, rk = left_rotate([lk, rk], n_shifts)
         compression_permutation = permute(lk + rk, compression_permutation_table)
         subkeys.append(compression_permutation)
 
@@ -152,8 +154,7 @@ def round(input_block, subkey):
         1, 7, 23, 13, 31, 26, 2, 8,
         18, 12, 29, 5, 21, 10, 3, 24
     ]
-    l = input_block[:32]
-    r = input_block[32:]
+    l, r = split_block(input_block)
     expansion_permutation = permute(r, expansion_permutation_table)
     xor1 = xor(expansion_permutation, subkey)
     s_box_output = s_box(xor1)
@@ -217,7 +218,7 @@ def des(input_block, subkeys, crypt_type):
         print(f'ROUND {i}:')
         output = round(output, subkeys[j])
 
-    swap = output[32:] + output[:32]
+    swap = output[len(output) // 2:] + output[:len(output) // 2]
     final_permutation = permute(swap, final_permutation_table)
 
     print()
