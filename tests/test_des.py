@@ -30,7 +30,7 @@ class Test(unittest.TestCase):
         self.assertEqual('11000001010100101111110101010110', s_box('01' * 24))
 
     def test_hex_to_bin(self):
-        with open('test_hex_to_bin.txt') as test_file:
+        with open('tests/test_hex_to_bin.txt') as test_file:
             self.assertEqual('0000000100100011010001010110011110001001101010111100110111101111', hex_to_bin(test_file))
 
     def test_pad(self):
@@ -56,11 +56,11 @@ class Test(unittest.TestCase):
 
         for i, (mode, option) in enumerate(itertools.product(['ecb', 'cbc'], ['e', 'd'])):
             with self.subTest(mode=mode, option=option):
-                with open('test_key_file.txt') as test_key_file:
-                    with open('test_infile.txt') as test_infile:
-                        with open('test_outfile.txt', 'w+') as test_outfile:
+                with open('tests/test_key_file.txt') as test_key_file:
+                    with open('tests/test_infile.txt') as test_infile:
+                        with open('tests/test_outfile.txt', 'w+') as test_outfile:
                             if mode == 'cbc':
-                                with open('test_iv_file.txt') as test_iv_file:
+                                with open('tests/test_iv_file.txt') as test_iv_file:
                                     crypt(mode, option, test_key_file, test_infile, test_outfile, test_iv_file)
                             else:
                                 crypt(mode, option, test_key_file, test_infile, test_outfile)
