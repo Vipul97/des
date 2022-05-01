@@ -61,7 +61,7 @@ def gen_subkeys(key):
 
 
 def xor(block_1, block_2):
-    return bin(int(block_1, 2) ^ int(block_2, 2))[2:].zfill(len(block_1))
+    return f'{int(block_1, 2) ^ int(block_2, 2):>0{len(block_1)}b}'
 
 
 def s_box(block):
