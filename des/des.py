@@ -153,22 +153,23 @@ def round(input_block, subkey):
         1, 7, 23, 13, 31, 26, 2, 8,
         18, 12, 29, 5, 21, 10, 3, 24
     ]
+
     l, r = split_block(input_block)
     expansion_permutation = permute(r, expansion_permutation_table)
-    xor1 = xor(expansion_permutation, subkey)
-    s_box_output = s_box(xor1)
+    xor_1 = xor(expansion_permutation, subkey)
+    s_box_output = s_box(xor_1)
     p_box = permute(s_box_output, p_box_table)
-    xor2 = xor(p_box, l)
-    output = r + xor2
+    xor_2 = xor(p_box, l)
+    output = r + xor_2
 
     fprint('INPUT', f'{l} {r}')
     fprint('SUBKEY', subkey)
     fprint('EXPANSION PERMUTATION', expansion_permutation)
-    fprint('XOR', xor1)
+    fprint('XOR', xor_1)
     fprint('S-BOX SUBSTITUTION', s_box_output)
     fprint('P-BOX PERMUTATION', p_box)
-    fprint('XOR', xor2)
-    fprint('SWAP', f'{r} {xor2}')
+    fprint('XOR', xor_2)
+    fprint('SWAP', f'{r} {xor_2}')
     fprint('OUTPUT', output)
 
     return output
