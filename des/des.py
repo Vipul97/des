@@ -194,6 +194,7 @@ def des(input_block, subkeys, crypt_type):
         33, 1, 41, 9, 49, 17, 57, 25,
         32, 0, 40, 8, 48, 16, 56, 24
     ]
+
     initial_permutation = permute(input_block, initial_permutation_table)
 
     print()
@@ -234,6 +235,7 @@ def crypt(mode, crypt_type, key_file, infile, outfile, iv_file=None):
     if mode == 'ecb':
         for i in range(0, len(bin_in_str), BLOCK_SIZE):
             bin_out_str += des(bin_in_str[i:i + BLOCK_SIZE], subkeys, crypt_type)
+
     else:
         last_block = hex_to_bin(iv_file.read()[:-1])
 
@@ -247,6 +249,7 @@ def crypt(mode, crypt_type, key_file, infile, outfile, iv_file=None):
 
             if crypt_type == 'e':
                 last_block = output
+
             else:
                 output = xor(output, last_block)
                 last_block = block
