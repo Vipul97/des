@@ -203,15 +203,15 @@ def des(input_block, subkeys, crypt_type):
 
     if crypt_type == 'e':
         start = 0
-        end = 16
+        stop = 16
         step = 1
     else:
         start = 15
-        end = -1
+        stop = -1
         step = -1
 
     output = initial_permutation
-    for i, j in enumerate(range(start, end, step), 1):
+    for i, j in enumerate(range(start, stop, step), 1):
         print()
         print(f'ROUND {i}:')
         output = round(output, subkeys[j])
