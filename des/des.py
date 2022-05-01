@@ -5,6 +5,16 @@ import argparse
 BLOCK_SIZE = 64
 
 
+def hex_to_bin(file):
+    hex_str = file.read()[:-1]
+
+    return f'{int(hex_str, 16):0{len(4 * hex_str)}b}'
+
+
+def pad(bin_str):
+    return bin_str + '0' * ((BLOCK_SIZE - len(bin_str) % BLOCK_SIZE) % BLOCK_SIZE)
+
+
 def fprint(text, variable):
     print(f'{text:>22}: {variable}')
 
@@ -124,16 +134,6 @@ def s_box(block):
         output += f'{s_box_table[i][row][column]:04b}'
 
     return output
-
-
-def hex_to_bin(file):
-    hex_str = file.read()[:-1]
-
-    return f'{int(hex_str, 16):0{len(4 * hex_str)}b}'
-
-
-def pad(bin_str):
-    return bin_str + '0' * ((BLOCK_SIZE - len(bin_str) % BLOCK_SIZE) % BLOCK_SIZE)
 
 
 def round(input_block, subkey):

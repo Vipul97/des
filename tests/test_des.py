@@ -5,6 +5,16 @@ from des.des import left_rotate, permute, gen_subkeys, xor, s_box, hex_to_bin, p
 
 
 class Test(unittest.TestCase):
+    def test_hex_to_bin(self):
+        with open('tests/test_hex_to_bin.txt') as test_file:
+            self.assertEqual('0000000100100011010001010110011110001001101010111100110111101111', hex_to_bin(test_file))
+
+    def test_pad(self):
+        self.assertEqual(0, len(pad('')))
+        self.assertEqual(64, len(pad('0')))
+        self.assertEqual(64, len(pad('0' * 32)))
+        self.assertEqual(128, len(pad('0' * 128)))
+
     def test_left_rotate(self):
         self.assertEqual(['10' * 14], left_rotate(['01' * 14], 1))
 
@@ -28,16 +38,6 @@ class Test(unittest.TestCase):
 
     def test_s_box(self):
         self.assertEqual('11000001010100101111110101010110', s_box('01' * 24))
-
-    def test_hex_to_bin(self):
-        with open('tests/test_hex_to_bin.txt') as test_file:
-            self.assertEqual('0000000100100011010001010110011110001001101010111100110111101111', hex_to_bin(test_file))
-
-    def test_pad(self):
-        self.assertEqual(0, len(pad('')))
-        self.assertEqual(64, len(pad('0')))
-        self.assertEqual(64, len(pad('0' * 32)))
-        self.assertEqual(128, len(pad('0' * 128)))
 
     def test_round(self):
         self.assertEqual('0101010101010101010101010101010101101101100011101010110010011110',
