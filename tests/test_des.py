@@ -6,8 +6,8 @@ from des.des import left_rotate, permute, gen_subkeys, xor, s_box, hex_to_bin, p
 
 class Test(unittest.TestCase):
     def test_hex_to_bin(self):
-        with open('tests/test_hex_to_bin.txt') as test_file:
-            self.assertEqual('0000000100100011010001010110011110001001101010111100110111101111', hex_to_bin(test_file))
+        self.assertEqual('0000000100100011010001010110011110001001101010111100110111101111',
+                         hex_to_bin('0123456789ABCDEF'))
 
     def test_pad(self):
         self.assertEqual(0, len(pad('')))

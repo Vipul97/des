@@ -5,9 +5,7 @@ import argparse
 BLOCK_SIZE = 64
 
 
-def hex_to_bin(file):
-    hex_str = file.read()[:-1]
-
+def hex_to_bin(hex_str):
     return f'{int(hex_str, 16):0{len(4 * hex_str)}b}'
 
 
@@ -229,15 +227,15 @@ def des(input_block, subkeys, crypt_type):
 
 
 def crypt(mode, crypt_type, key_file, infile, outfile, iv_file=None):
-    bin_in_str = pad(hex_to_bin(infile))
-    subkeys = gen_subkeys(hex_to_bin(key_file))
+    bin_in_str = pad(hex_to_bin(infile.read()[:-1]))
+    subkeys = gen_subkeys(hex_to_bin(key_file.read()[:-1]))
     bin_out_str = ''
 
     if mode == 'ecb':
         for i in range(0, len(bin_in_str), BLOCK_SIZE):
             bin_out_str += des(bin_in_str[i:i + BLOCK_SIZE], subkeys, crypt_type)
     else:
-        last_block = hex_to_bin(iv_file)
+        last_block = hex_to_bin(iv_file.read()[:-1])
 
         for i in range(0, len(bin_in_str), BLOCK_SIZE):
             block = bin_in_str[i:i + BLOCK_SIZE]
