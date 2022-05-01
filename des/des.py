@@ -43,6 +43,7 @@ def gen_subkeys(key):
         45, 41, 49, 35, 28, 31
     ]
     left_rotate_order = [1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1]
+
     key_permutation = permute(key, key_permutation_table)
 
     fprint('KEY', key)
