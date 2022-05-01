@@ -127,13 +127,9 @@ def s_box(block):
 
 
 def hex_to_bin(file):
-    bin_table = ['0000', '0001', '0010', '0011',
-                 '0100', '0101', '0110', '0111',
-                 '1000', '1001', '1010', '1011',
-                 '1100', '1101', '1110', '1111'
-                 ]
+    hex_str = file.read()[:-1]
 
-    return ''.join(bin_table[int(hex_digit, 16)] for hex_digit in file.read()[:-1])
+    return f'{int(hex_str, 16):0{len(4 * hex_str)}b}'
 
 
 def pad(bin_str):
