@@ -259,7 +259,7 @@ def crypt(mode, crypt_type, key_file, infile, outfile, iv_file=None):
     outfile.write(f'{int(bin_out_str, 2):0{len(bin_out_str) // 4}X}\n')
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     def add_common_arguments(parser):
         crypt_group = parser.add_mutually_exclusive_group(required='True')
         crypt_group.add_argument('-e', action='store_const', dest='option', const='e', help='encrypt')
