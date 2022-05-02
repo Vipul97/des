@@ -1,7 +1,7 @@
 import itertools
 import unittest
 
-from des.des import left_rotate, permute, gen_subkeys, xor, s_box, hex_to_bin, pad, round, des, crypt
+from des.des import hex_to_bin, pad, left_rotate, permute, gen_subkeys, xor, s_box, round, des, crypt
 
 
 class Test(unittest.TestCase):
