@@ -10,10 +10,15 @@ class TestDES(unittest.TestCase):
                          '0000000100100011010001010110011110001001101010111100110111101111')
 
     def test_pad(self):
-        self.assertEqual(len(pad('')), 0)
-        self.assertEqual(len(pad('0')), 64)
-        self.assertEqual(len(pad('0' * 32)), 64)
-        self.assertEqual(len(pad('0' * 128)), 128)
+        test_cases = [
+            ('', 0),
+            ('0', 64),
+            ('0' * 32, 64),
+            ('0' * 128, 128)
+        ]
+        for input_data, expected_length in test_cases:
+            with self.subTest(input=input_data):
+                self.assertEqual(len(pad(input_data)), expected_length)
 
     def test_left_rotate(self):
         self.assertEqual(left_rotate(['01' * 14], 1), ['10' * 14])
@@ -85,5 +90,5 @@ class TestDES(unittest.TestCase):
                     self.assertEqual(test_outfile.read().strip(), expected_results[i])
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     unittest.main()

@@ -119,7 +119,7 @@ FINAL_PERMUTATION_TABLE = [
 
 
 def hex_to_bin(hex_str):
-    return f'{int(hex_str, 16):0{len(4 * hex_str)}b}'
+    return f'{int(hex_str, 16):0{len(hex_str) * 4}b}'
 
 
 def pad(bin_str):
@@ -279,10 +279,7 @@ def main():
 
     args = parser.parse_args()
 
-    if args.mode == 'ecb':
-        crypt(args.mode, args.option, args.key_file, args.infile, args.outfile)
-    else:
-        crypt(args.mode, args.option, args.key_file, args.infile, args.outfile, args.iv_file)
+    crypt(args.mode, args.option, args.key_file, args.infile, args.outfile, getattr(args, 'iv_file', None))
 
 
 if __name__ == '__main__':
