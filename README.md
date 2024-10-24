@@ -40,8 +40,8 @@ To run the program, execute `des.py` with the desired mode and necessary paramet
         
         optional arguments:
           -h, --help  show this help message and exit
-          -e          encrypt
-          -d          decrypt
+          -e          Encrypt the input file.
+          -d          Decrypt the input file.
 
 ##### CBC Mode
 
@@ -55,8 +55,8 @@ To run the program, execute `des.py` with the desired mode and necessary paramet
         
         optional arguments:
           -h, --help  show this help message and exit
-          -e          encrypt
-          -d          decrypt
+          -e          Encrypt the input file.
+          -d          Decrypt the input file.
 
 ## Examples
 
