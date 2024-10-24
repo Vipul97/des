@@ -275,7 +275,7 @@ def main():
     cbc_parser = add_common_arguments(
         sub_parsers.add_parser('cbc', help='Use Cipher Block Chaining (CBC) encryption mode.'))
     cbc_parser.add_argument('iv_file', type=argparse.FileType('r'),
-                            help='Text file to be used as IV for encryption/decryption.')
+                            help='Path to the text file used as IV for encryption/decryption.')
 
     args = parser.parse_args()
 
