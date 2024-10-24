@@ -1,6 +1,6 @@
 # Data Encryption Standard (DES)
 
-This repository contains an implementation of the Data Encryption Standard (DES) in Python 3.8. It supports two modes of
+This repository contains an implementation of the Data Encryption Standard (DES) in Python 3.12. It supports two modes of
 operation: Electronic Codebook (ECB) and Cipher Block Chaining (CBC).
 
 ## Features
