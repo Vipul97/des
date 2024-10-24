@@ -51,7 +51,7 @@ To run the program, execute `des.py` with the desired mode and necessary paramet
           key_file    Path to the text file used as the key for encryption/decryption.
           infile      Path to the text file used as input for encryption/decryption.
           outfile     Path to the text file where the output will be written.
-          iv_file     Text file to be used as IV for encryption/decryption.
+          iv_file     Path to the text file used as IV for encryption/decryption.
         
         optional arguments:
           -h, --help  show this help message and exit
